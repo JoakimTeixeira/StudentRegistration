@@ -5,5 +5,5 @@ University project for end of course in Algorithms II.
 
 ## What I've learned
 
-* Developed student registration with: *menu*, *register student*, *consult student*, *print students summary* and *student grades situation* functionalities.
-* Implemented data structures and functions.
+- Developed student registration with: *menu*, *register student*, *consult student*, *print students summary* and *student grades situation* functionalities
+- Implemented data structures and functions
