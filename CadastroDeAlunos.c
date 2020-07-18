@@ -2,261 +2,321 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
-#define MAX 60     //Define constante máxima
+#define clearScreen() printf("\e[1;1H\e[2J")
+#define MAX 60 // set maximum constant
 
-//Estrutura da ficha do aluno
+// student record structure
 typedef struct
 {
-	char  nome[MAX];
-	int   matricula;
-	char  dtNasc[MAX];
-	float nota1;
-	float nota2;
-	float media;
-	int   ativo;
-}  aluno;
+	char name[MAX];
+	int registryNumber;
+	char birthDate[MAX];
+	float grade1;
+	float grade2;
+	float average;
+	int active;
+} student;
 
-/*Vetor Alunos é do tipo estrutura aluno (até 60)*/
-aluno Alunos[MAX];
-int cont = 0; /*Variável contadora global, registra a quantidade de alunos cadastrados.*/
+// array "Students" have type "student" (up to 60 positions)
+student Students[MAX];
 
-/*Inicialização das funções*/
-void  menu();
-void cadastrar();
-void consultar();
-void imprimir();
-void situacao();
+// global counter variable, records the number of students registered
+int counter = 0;
 
-/*Função principal: chamará a função do menu, que por
-	 sua vez chamará as funções das opções*/
+// initialize functions
+void menu();
+void registerStudent();
+void consultStudent();
+void printClassData();
+void printStudentSituation();
+
+// main function: call "menu" functions, which call the menu options functions
 int main()
 {
-	setlocale(LC_ALL, "Portuguese");
+	setlocale(LC_ALL, "English");
 	menu();
 	return 0;
 }
 
-/*Declaração do menu*/
+void printStudentData(int index)
+{
+	printf("\nStudent %d: \n", index + 1);
+	printf("Name: %s\n", Students[index].name);
+	printf("Registry number: %d\n", Students[index].registryNumber);
+	printf("Birth date: %s\n", Students[index].birthDate);
+	printf("1st grade: %.1f\n", Students[index].grade1);
+	printf("2nd grade: %.1f\n", Students[index].grade2);
+}
+
+// global variables to use in "chooseOption" function
+char chooseToTypeZero[] = "\nType [0] to return: ";
+char chooseBetweenTwo[] = "\nChoose an option: ";
+
+int chooseOption(int option, char string[])
+{
+	printf("%s", string);
+	scanf("%d", &option);
+	return option;
+}
+
+// menu declarations
 void menu()
 {
-	system("cls"); /*Limpa tela*/
-	int op;
+	// cleans window
+	clearScreen();
+	int option = 0;
+
 	do
 	{
-		printf("====== Curso de Biologia - Turma 825 ======\n");
-		printf("\n  [1] Cadastrar alunos\n");
-		printf("  [2] Consultar dados de um aluno\n");
-		printf("  [3] Imprimir dados da turma\n");
-		printf("  [4] Situação dos alunos\n");
-		printf("  [5] Sair\n");
-		printf("\n=================================================\n");
-		scanf("%d", &op);
-		getchar();
-		switch (op)
-		{	/*Pede para o usuário escolher qual opção do menu ele quer.	Selecionando, a função será chamada.*/
+		printf("====== Biology course - Class 825 ======\n");
+		printf("\n  [1] Register students\n");
+		printf("  [2] Query student data\n");
+		printf("  [3] Print class data\n");
+		printf("  [4] Students grade situation\n");
+		printf("  [5] Exit\n");
+		printf("\n========================================\n");
+
+		option = chooseOption(option, chooseBetweenTwo);
+
+		// asks the user to choose which menu option he wants.
+		// selecting an option, a function is called
+		switch (option)
+		{
 		case 1:
-			cadastrar();
+			registerStudent();
 			break;
 
 		case 2:
-			consultar();
+			consultStudent();
 			break;
 
 		case 3:
-			imprimir();
+			printClassData();
 			break;
 
 		case 4:
-			situacao();
+			printStudentSituation();
 			break;
 		}
-	} while ((op > 0) && (op < 5));
+	} while ((option > 0) && (option < 5));
 }
 
-/*Declaração do menu 1 - Cadastrar*/
-void cadastrar()
+//======= menu declaration 1: register =======
+void registerStudent()
 {
-	system("cls");
-	int op;
+	clearScreen();
+	int option = 0;
+
 	do
 	{
-		if (cont >= MAX)
+		if (counter >= MAX)
 		{
-			printf("\nMáximo de cadastros atingidos!\n");
+			printf("\nYou have reached the maximum number of records!\n");
+			getchar();
 			break;
 		}
 		else
 		{
-			system("cls");
-			printf("\nNome: ");
-			scanf("%s", &Alunos[cont].nome);
-			printf("\nMatrícula: ");
-			scanf("%d", &Alunos[cont].matricula);
-			printf("\nData de nascimento: ");
-			scanf("%s", &Alunos[cont].dtNasc);
-			printf("\nNota 1: ");
-			scanf("%f", &Alunos[cont].nota1);
-			printf("\nNota 2: ");
-			scanf("%f", &Alunos[cont].nota2);
-			Alunos[cont].media = (Alunos[cont].nota1 + Alunos[cont].nota2) / 2;
-			cont++;//Conta mais um sempre que um aluno é cadastrado
+			clearScreen();
+			printf("\nName: ");
+			scanf("%s", Students[counter].name);
 
-			//Menu 1 repete até usuário escolher sair ou ter 60 itens (alunos)
-			if (cont >= MAX)
+			printf("\nRegistry number: ");
+			scanf("%d", &Students[counter].registryNumber);
+
+			printf("\nBirth date: ");
+			scanf("%s", Students[counter].birthDate);
+
+			printf("\n1st grade: ");
+			scanf("%f", &Students[counter].grade1);
+
+			printf("\n2nd grade: ");
+			scanf("%f", &Students[counter].grade2);
+
+			Students[counter].average = (Students[counter].grade1 + Students[counter].grade2) / 2;
+			// adds whenever a student is registered
+			counter++;
+
+			// menu declaration 1 repeats until user chooses to leave
+			// or register size exceeds 60 students
+			if (counter >= MAX)
 			{
-				printf("\nMáximo de cadastros atingidos!\n");
+				printf("\nYou have reached the maximum number of records!\n");
 				break;
 			}
 			else
 			{
-				printf("\nAluno registrado\n");
+				printf("\nStudent registered!\n");
 			}
 		}
-		printf("\nGostaria de cadastrar um novo aluno? ");
-		printf("\n1- sim\n0- não\n");
-		scanf("%d", &op);
+		printf("\nWould you like to register a new student? ");
+		printf("\n[0] No    [1] Yes\n");
+		option = chooseOption(option, chooseBetweenTwo);
 
-	} while (op != 0);
-	system("cls");
+	} while (option != 0);
+	clearScreen();
 }
 
-//Declaração do menu 2 - Consultar
-void consultar()
+//======= menu declaration 2 - query data =======
+void consultStudent()
 {
-	system("cls");
-	int op, sucesso = 0; //Variável "sucesso" serve como teste (false or true).
+	clearScreen();
+	// variable "success" serves as a test (false or true) to check if a student was found
+	int option, success = 0;
+
 	do
 	{
-		printf("\nDigite [1] para pesquisar através da matrícula");
-		printf("\nDigite [2] para pesquisar através do nome\n");
-		scanf("%d", &op);
-		system("cls");
-		if (op == 1)
+		printf("\nType [1] to search through registry number");
+		printf("\nType [2] to search through student name\n");
+		option = chooseOption(option, chooseBetweenTwo);
+		clearScreen();
+
+		if (option == 1)
 		{
 			int i = 0;
-			int matricula;
-			printf("\nDigite o número da matrícula: ");
-			scanf("%d", &matricula);
-			for (i = 0; i < cont; i++) /*Utilização da variável global "CONT". Possuirá quantidade de alunos cadastrados*/
+			int registryNumber = 0;
+
+			printf("\nType the registry number: ");
+			scanf("%d", &registryNumber);
+
+			// global variable "counter": storages the number of registered students
+			for (i = 0; i < counter; i++)
 			{
-				if (matricula == (Alunos[i].matricula))
+				if (registryNumber == (Students[i].registryNumber))
 				{
-					sucesso = 1;
+					success = 1;
 					break;
 				}
-			}
-			if (sucesso == 1)
-			{ /*se 1 (true), imprima os dados do aluno da posição i.*/
-				printf("\nAluno %d: \n", i + 1);
-				printf("Nome: %s\n", Alunos[i].nome);
-				printf("Matrícula: %d\n", Alunos[i].matricula);
-				printf("Data de nascimento: %s\n", Alunos[i].dtNasc);
-				printf("Nota 1: %.1f\n", Alunos[i].nota1);
-				printf("Nota 2: %.1f\n", Alunos[i].nota2);
-			}
-			else
-			{ //senão 0, (false).
-				printf("Matrícula não encontrada\n");
-				break;
-			}
-		}
-
-		else if (op == 2)
-		{
-			int j = 0;
-			sucesso = 0;
-			char nome[MAX];
-			system("cls");
-			printf("\nDigite o nome do aluno para pesquisar: ");
-			scanf("%s", &nome);
-			for (j = 0; j < cont; j++)
-			{
-				if (strstr(Alunos[j].nome, nome) != NULL) //função "strstr" serve para busca de strings
-				{
-					sucesso = 1;
-					break;
-				}
-			}
-			if (sucesso == 1)
-			{
-				printf("\nAluno %d: \n", j + 1);
-				printf("Nome: %s\n", Alunos[j].nome);
-				printf("Matrícula: %d\n", Alunos[j].matricula);
-				printf("Data de nascimento: %s\n", Alunos[j].dtNasc);
-				printf("Nota 1: %.1f\n", Alunos[j].nota1);
-				printf("Nota 2: %.1f\n", Alunos[j].nota2);
-			}
-			else
-			{
-				printf("Nome não encontrado\n");
-				break;
-			}
-		}
-		printf("\nDigite 1 se quiser continuar pesquisando ou 0 se quiser sair: \n");
-		scanf("%d", &op);
-		system("cls");
-
-	} while (op != 0);
-	system("cls");
-}
-
-//Declaração do menu 3 - Imprimir
-void imprimir()
-{
-	int op, i;
-	system("cls");
-	printf("\n=====Imprimindo=====\n");  //Criar método para informar que não há cadastro, caso opção 3 for selecionada sem ter aluno no sistema
-	do
-	{
-		for (i = 0; i < cont; i++)
-		{
-			printf("\nAluno %d: \n", i + 1);
-			printf("Matrícula: %d\n", Alunos[i].matricula);
-			printf("Nome: %s\n", Alunos[i].nome);
-			printf("Data de nascimento: %s\n", Alunos[i].dtNasc);
-			printf("Nota 1: %.1f\n", Alunos[i].nota1);
-			printf("Nota 2: %.1f\n", Alunos[i].nota2);
-		}
-		printf("\nDigite 0 para retornar: \n");
-		scanf("%d", &op);
-		system("cls");
-
-	} while (op != 0);
-	system("cls");
-}
-
-//Declaração do menu 4 - Situação
-void situacao()
-{
-	system("cls");
-	int s, op;
-	// -------------------------------------------------------------------
-	do
-	{
-		for (s = 0; s < cont; s++)
-		{
-			//------------------------------------------------------------------------
-			if (Alunos[s].media >= 7)
-			{
-				printf("\n%s, Média: %.1f, Situação: Aprovado\n", Alunos[s].nome, Alunos[s].media);
-			}
-			//---------------------------------------------------------------------------
-			else
-				if ((Alunos[s].media >= 3) && (Alunos[s].media < 7))
-				{
-					printf("\n%s, Média: %.1f, Situação: Prova Final\n", Alunos[s].nome, Alunos[s].media);
-				}
-			//------------------------------------------------------------------------------------
 				else
-					if (Alunos[s].media < 3)
-					{
-						printf("\n%s, Média: %.1f, Situação: Reprovado\n", Alunos[s].nome, Alunos[s].media);
-					}
-		}
-		printf("\n\nDigite 0 para retornar: \n");
-		scanf("%d", &op);
+				{
+					success = 0;
+					break;
+				}
+			}
 
-	} while (op != 0);
-	system("cls");
-	// ----------------------------------------------------------------------------
+			// if 1 (true), print the student data for current position
+			if (success == 1)
+			{
+				printStudentData(i);
+			}
+			// else 0 (false)
+			else if (success == 0)
+			{
+				printf("\n==== Registry not found ====\n");
+			}
+		}
+
+		else if (option == 2)
+		{
+			int i = 0;
+			success = 0;
+			char name[MAX];
+
+			clearScreen();
+			printf("\nType the student name: ");
+			scanf("%s", name);
+
+			for (i = 0; i < counter; i++)
+			{
+				// function "strstr" is used to search strings
+				if (strstr(Students[i].name, name) != NULL)
+				{
+					success = 1;
+					break;
+				}
+				else
+				{
+					success = 0;
+					break;
+				}
+			}
+
+			if (success == 1)
+			{
+				printStudentData(i);
+			}
+			else if (success == 0)
+			{
+				printf("\n==== Name not found ====\n");
+			}
+		}
+
+		printf("\nType [0] if you want to leave");
+		printf("\nType [1] if you want to continue searching\n");
+		option = chooseOption(option, chooseBetweenTwo);
+		clearScreen();
+
+	} while (option != 0);
+
+	clearScreen();
+}
+
+//======= menu declaration 3: print =======
+void printClassData()
+{
+	int option, i;
+	clearScreen();
+
+	if (counter == 0)
+	{
+		printf("Nothing to print\n");
+		option = chooseOption(option, chooseToTypeZero);
+		clearScreen();
+	}
+	else
+	{
+		printf("\n===== Printing data =====\n");
+		// creates method to inform that there is no registration, if option 3 is selected without having a student in the system
+		do
+		{
+			for (i = 0; i < counter; i++)
+			{
+				printStudentData(i);
+			}
+			option = chooseOption(option, chooseToTypeZero);
+			clearScreen();
+
+		} while (option != 0);
+		clearScreen();
+	}
+}
+
+//======= menu declaration 4: grade situation =======
+void printStudentSituation()
+{
+	clearScreen();
+	int option, i;
+	if (counter == 0)
+	{
+		printf("Nothing to print\n");
+		option = chooseOption(option, chooseToTypeZero);
+		clearScreen();
+	}
+	else 
+	{
+		do
+		{
+			for (i = 0; i < counter; i++)
+			{
+				//---------------------------------------------------------------
+				if (Students[i].average >= 7)
+				{
+					printf("\n%s, Grade average: %.1f, situation: Approved\n", Students[i].name, Students[i].average);
+				}
+				//---------------------------------------------------------------
+				else if ((Students[i].average >= 3) && (Students[i].average < 7))
+				{
+					printf("\n%s, Grade average: %.1f, situation: Final test\n", Students[i].name, Students[i].average);
+				}
+				//---------------------------------------------------------------
+				else if (Students[i].average < 3)
+				{
+					printf("\n%s, Grade average: %.1f, situation: Reproved\n", Students[i].name, Students[i].average);
+				}
+			}
+			option = chooseOption(option, chooseToTypeZero);
+
+		} while (option != 0);
+		clearScreen();
+	}	
 }
