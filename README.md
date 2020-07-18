@@ -1,7 +1,7 @@
 # Student Registration
 University project for end of course in Algorithms II.
 
-![image](https://user-images.githubusercontent.com/12193814/58293373-997cb300-7d9b-11e9-99a6-7e6590f5a30c.png)
+![image](https://user-images.githubusercontent.com/12193814/87851745-2c4aac00-c8d2-11ea-8a00-f3b8c693bf80.png)
 
 ## What I've learned
 
